@@ -241,6 +241,13 @@
                     <Mask>/^(\/.*)?$/u</Mask>
                     <ValidationMessage>Please enter a valid 'Handle Path' that starts with '/'.</ValidationMessage>
                 </HandlePath>
+                <HandleDirective type="OptionField">
+                    <Required>Y</Required>
+                    <Default>reverse_proxy</Default>
+                    <OptionValues>
+                        <reverse_proxy>reverse_proxy</reverse_proxy>
+                    </OptionValues>
+                </HandleDirective>
                 <header type="ModelRelationField">
                     <Model>
                         <reverseproxy>

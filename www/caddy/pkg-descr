@@ -33,6 +33,7 @@ Plugin Changelog
 * Add: HTTP response code and HTTP response message can be set per access list in advanced mode.
 * Add: Header functionality added. Multiple header manipulations can be set per handler.
 * Cleanup: Update searchBase() in ReverseProxyController.php for easier maintainability.
+* Cleanup: Remove hardcoded reverse_proxy directive from template in favor of a selectable option in handlers, preparing for more flexibility in the future.
 * Fix: Move selectpicker empty option to model in general.volt, using BlankDesc. This fixes the option IPv4+IPv6 not appearing in Dynamic DNS. 
 
 1.5.3

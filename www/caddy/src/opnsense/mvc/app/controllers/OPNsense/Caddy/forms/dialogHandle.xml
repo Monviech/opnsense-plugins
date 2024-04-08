@@ -31,6 +31,13 @@
         <help><![CDATA[Enter a handler like '/*' or '/example/*', or leave blank for a catch-all handler (recommended). Any request matching this handler will be reverse proxied to the upstream destination.]]></help>
     </field>
     <field>
+        <id>handle.HandleDirective</id>
+        <label>Handle Directive</label>
+        <type>dropdown</type>
+        <help><![CDATA[In most cases, leaving this as "reverse_proxy" will be the best choice. Other directives might be implemented in the future.]]></help>
+        <advanced>true</advanced>
+    </field>
+    <field>
         <id>handle.description</id>
         <label>Description</label>
         <type>text</type>

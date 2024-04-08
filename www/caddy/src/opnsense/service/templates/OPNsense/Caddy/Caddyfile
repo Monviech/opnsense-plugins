@@ -395,7 +395,7 @@
         {% if handle.ToPath|default("") != "" %}
         rewrite * {{ handle.ToPath }}{uri}
         {% endif %}
-        reverse_proxy {{ handle.ToDomain }}{% if handle.ToPort %}:{{ handle.ToPort }}{% endif %} {
+        {{ handle.HandleDirective }} {{ handle.ToDomain }}{% if handle.ToPort %}:{{ handle.ToPort }}{% endif %} {
             {{ header_manipulation(handle) }}
             {% if handle.HttpTls|default("0") == "1" or handle.HttpTlsInsecureSkipVerify|default("0") == "1" %}
                 {% if handle.HttpNtlm|default("0") == "1" %}
