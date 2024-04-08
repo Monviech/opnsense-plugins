@@ -34,7 +34,7 @@
         <id>handle.HandleDirective</id>
         <label>Handle Directive</label>
         <type>dropdown</type>
-        <help><![CDATA[In most cases, leaving this as "reverse_proxy" will be the best choice. Other directives might be implemented in the future.]]></help>
+        <help><![CDATA[In most cases, leaving this as "reverse_proxy" will be the best choice. "forward_auth" is an advanced scenario, read the documentation here: https://caddyserver.com/docs/caddyfile/directives/forward_auth.]]></help>
         <advanced>true</advanced>
     </field>
     <field>
@@ -54,7 +54,7 @@
         <type>dropdown</type>
         <type>select_multiple</type>
         <size>5</size>
-        <help><![CDATA[Select one or multiple header manipulations. These will be set to this handler. Generally this is not needed. Setting a wrong configuration can be a security risk or break functionality.]]></help>
+        <help><![CDATA[Select one or multiple header manipulations. These will be set to this handler. When using "forward_auth", a combination of "header_up" and "copy_headers" is also supported.]]></help>
     </field>
     <field>
         <type>header</type>
@@ -78,7 +78,7 @@
         <id>handle.ToPath</id>
         <label>Upstream Path</label>
         <type>text</type>
-        <help><![CDATA[Enter a path prefix like '/guacamole' that should be prepended to the upstream request because the application demands it.]]></help>
+        <help><![CDATA[When using "reverse_proxy" (default), enter a path prefix like '/guacamole' that should be prepended to the upstream request because the application demands it. When using "forward_auth" and "copy_headers" to send pre-check requests to an authentication provider, e.g. Authelia, enter an uri like: "/api/verify?rd=https://auth.example.com".]]></help>
         <advanced>true</advanced>
     </field>
     <field>

@@ -246,6 +246,7 @@
                     <Default>reverse_proxy</Default>
                     <OptionValues>
                         <reverse_proxy>reverse_proxy</reverse_proxy>
+                        <forward_auth>forward_auth</forward_auth>
                     </OptionValues>
                 </HandleDirective>
                 <header type="ModelRelationField">
@@ -253,8 +254,8 @@
                         <reverseproxy>
                             <source>OPNsense.Caddy.Caddy</source>
                             <items>reverseproxy.header</items>
-                            <display>HeaderUpDown,HeaderType,HeaderValue,description</display>
-                            <display_format>%s %s %s - %s</display_format>
+                            <display>HeaderUpDown,HeaderType,HeaderValue,HeaderReplace</display>
+                            <display_format>%s %s %s %s</display_format>
                         </reverseproxy>
                     </Model>
                     <Multiple>Y</Multiple>
@@ -271,7 +272,7 @@
                 </ToPort>
                 <ToPath type="TextField">
                     <Mask>/^(\/.*)?$/u</Mask>
-                    <ValidationMessage>Please enter a valid 'Backend Path' that starts with '/'.</ValidationMessage>
+                    <ValidationMessage>Please enter a valid 'Backend Path' or 'uri' that starts with '/'.</ValidationMessage>
                 </ToPath>
                 <HttpTls type="BooleanField"/>
                 <HttpNtlm type="BooleanField"/>
@@ -334,6 +335,7 @@
                     <OptionValues>
                         <header_up>header_up</header_up>
                         <header_down>header_down</header_down>
+                        <copy_headers>copy_headers</copy_headers>
                     </OptionValues>
                     <Required>Y</Required>
                 </HeaderUpDown>
