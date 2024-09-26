@@ -180,8 +180,23 @@
                     <IpAllowed>N</IpAllowed>
                     <FqdnWildcardAllowed>Y</FqdnWildcardAllowed>
                     <ValidationMessage>Please enter a valid domain name.</ValidationMessage>
+                    <Constraints>
+                        <check001>
+                            <type>UniqueConstraint</type>
+                            <ValidationMessage>Each combination of domain and port must be unique.</ValidationMessage>
+                            <addFields>
+                                <field1>FromPort</field1>
+                            </addFields>
+                        </check001>
+                    </Constraints>
                 </FromDomain>
-                <FromPort type="PortField"/>
+                <FromPort type="PortField">
+                    <Constraints>
+                        <check001>
+                            <reference>FromDomain.check001</reference>
+                        </check001>
+                    </Constraints>
+                </FromPort>
                 <accesslist type="ModelRelationField">
                     <Model>
                         <reverseproxy>
@@ -235,11 +250,25 @@
                             <display_format>%s %s</display_format>
                         </reverseproxy>
                     </Model>
+                    <Constraints>
+                        <check001>
+                            <reference>FromDomain.check001</reference>
+                        </check001>
+                    </Constraints>
                 </reverse>
                 <FromDomain type="HostnameField">
                     <Required>Y</Required>
                     <IpAllowed>N</IpAllowed>
                     <ValidationMessage>Please enter a valid domain name.</ValidationMessage>
+                    <Constraints>
+                        <check001>
+                            <type>UniqueConstraint</type>
+                            <ValidationMessage>Each combination of wildcard domain and subdomain must be unique.</ValidationMessage>
+                            <addFields>
+                                <field1>reverse</field1>
+                            </addFields>
+                        </check001>
+                    </Constraints>
                 </FromDomain>
                 <accesslist type="ModelRelationField">
                     <Model>
@@ -281,6 +310,11 @@
                             <display_format>%s%s %s</display_format>
                         </reverseproxy>
                     </Model>
+                    <Constraints>
+                        <check001>
+                            <reference>HandlePath.check001</reference>
+                        </check001>
+                    </Constraints>
                 </reverse>
                 <subdomain type="ModelRelationField">
                     <Model>
@@ -291,6 +325,11 @@
                             <display_format>%s %s</display_format>
                         </reverseproxy>
                     </Model>
+                    <Constraints>
+                        <check001>
+                            <reference>HandlePath.check001</reference>
+                        </check001>
+                    </Constraints>
                 </subdomain>
                 <HandleType type="OptionField">
                     <Required>Y</Required>
@@ -303,6 +342,16 @@
                 <HandlePath type="TextField">
                     <Mask>/^(\/.*)?$/u</Mask>
                     <ValidationMessage>Please enter a valid Path that starts with '/'.</ValidationMessage>
+                    <Constraints>
+                        <check001>
+                            <type>UniqueConstraint</type>
+                            <ValidationMessage>Each path must be unique per domain.</ValidationMessage>
+                            <addFields>
+                                <field1>reverse</field1>
+                                <field2>subdomain</field2>
+                            </addFields>
+                        </check001>
+                    </Constraints>
                 </HandlePath>
                 <accesslist type="ModelRelationField">
                     <Model>

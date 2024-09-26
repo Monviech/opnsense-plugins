@@ -36,88 +36,6 @@ use OPNsense\Core\Config;
 
 class Caddy extends BaseModel
 {
-    // Check domain-port combinations
-    private function checkForUniquePortCombos($items, $messages)
-    {
-        $combos = [];
-        foreach ($items as $item) {
-            $key = $item->__reference; // Dynamic key based on item reference
-            $fromDomain = (string) $item->FromDomain;
-            $fromPort = (string) $item->FromPort;
-
-            if ($fromPort === '') {
-                $defaultPorts = ['80', '443'];
-            } else {
-                $defaultPorts = [$fromPort];
-            }
-
-            foreach ($defaultPorts as $port) {
-                // Create a unique key for domain-port combination
-                $comboKey = $fromDomain . ':' . $port;
-
-                // Check for duplicate combinations
-                if (isset($combos[$comboKey])) {
-                    // Use dynamic $key for message referencing
-                    $messages->appendMessage(new Message(
-                        sprintf(
-                            gettext(
-                                'Duplicate entry: The combination of %s and port %s is already used. ' .
-                                'Each combination of domain and port must be unique.'
-                            ),
-                            $fromDomain,
-                            $port
-                        ),
-                        $key . ".FromDomain"
-                    ));
-                } else {
-                    $combos[$comboKey] = true;
-                }
-            }
-        }
-    }
-
-    // Check that subdomains are under a wildcard or exact domain
-    private function checkSubdomainsAgainstDomains($subdomains, $domains, $messages)
-    {
-        $wildcardDomainList = [];
-        foreach ($domains as $domain) {
-            if ((string) $domain->enabled === '1') {
-                $domainName = (string) $domain->FromDomain;
-                if (str_starts_with($domainName, '*.')) {
-                    $wildcardBase = substr($domainName, 2);
-                    $wildcardDomainList[$wildcardBase] = $domainName;
-                }
-            }
-        }
-
-        foreach ($subdomains as $subdomain) {
-            if ((string) $subdomain->enabled === '1') {
-                $subdomainName = (string) $subdomain->FromDomain;
-                $isValid = false;
-                foreach ($wildcardDomainList as $baseDomain => $wildcardDomain) {
-                    if (str_ends_with($subdomainName, $baseDomain)) {
-                        $isValid = true;
-                        break;
-                    }
-                }
-
-                if (!$isValid) {
-                    $key = $subdomain->__reference; // Dynamic key based on subdomain reference
-                    $messages->appendMessage(new Message(
-                        sprintf(
-                            gettext(
-                                'Invalid subdomain configuration: %s does not fall ' .
-                                'under any configured wildcard domain.'
-                            ),
-                            $subdomainName
-                        ),
-                        $key . ".FromDomain"
-                    ));
-                }
-            }
-        }
-    }
-
     // Get the current OPNsense WebGUI ports and check for conflicts with Caddy
     private function getWebGuiPorts()
     {
@@ -288,29 +206,9 @@ class Caddy extends BaseModel
     {
         $messages = parent::performValidation($validateFullModel);
 
-        // Check domain-port combinations
-        $this->checkForUniquePortCombos(
-            $this->reverseproxy->reverse->iterateItems(),
-            $messages
-        );
-
-        // Check that subdomains are under a wildcard or exact domain
-        $this->checkSubdomainsAgainstDomains(
-            $this->reverseproxy->subdomain->iterateItems(),
-            $this->reverseproxy->reverse->iterateItems(),
-            $messages
-        );
-
-        // Check WebGUI conflicts
         $this->checkWebGuiSettings($messages);
-
-        // Check for TLS conflicts in Domain
         $this->checkDisableTlsConflicts($messages);
-
-        // Check DisableSuperuser Port conflicts
         $this->checkSuperuserPorts($messages);
-
-        // Check Layer4 matchers
         $this->checkLayer4Matchers($messages);
 
         return $messages;
